@@ -3,23 +3,28 @@
 
 import argparse
 import json
-
+import math
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--text", required=True, help="Dirty input text")
+parser.add_argument("--text", required=True, help="Input text")
 parser.add_argument("--short", action='store_true')
 args = parser.parse_args()
 
+VALID_CHARS = u'qwertzuiopasdfghjklyxcvbnm1234567890QWERTZUIOPASDFGHJKLYXCVBNM ?:.,;-=/+ěščřžýáíéĚŠČŘŽÝÁÍÉůúŇ'
 
 def chars_score(text):
-  known_chars = u'qwertzuiopasdfghjklyxcvbnm1234567890QWERTZUIOPASDFGHJKLYXCVBNM ?:.,;-=/+ěščřžýáíéĚŠČŘŽÝÁÍÉůúŇ'
-  known_cnt = 0
+    known_cnt = 0
+    for char in text:
+        if char in VALID_CHARS:
+            known_cnt += 1
+    return float(known_cnt)/len(text)
 
-  for char in text:
-    if char in known_chars:
-      known_cnt += 1
-
-  return float(known_cnt)/len(text)
+def length_score(text):
+    cnt = 0
+    for char in text:
+        if char in VALID_CHARS:
+            cnt += 1
+    return min(math.log(cnt, 1000), 1.0)
 
 # TODO: add another functions here
 # def xyz_score(text):
@@ -29,14 +34,16 @@ def chars_score(text):
 
 def compute(scores):
     total = 0
-    cnt = len(scores)
+    cnt = 0
     for score in scores:
+        cnt += 1
         total = (total * (cnt-1) + score['value']) / cnt;
     return {'score': total, 'parts': scores}
 
 
 scores = []
 scores.append({'name': 'chars_score', 'value': chars_score(args.text)})
+scores.append({'name': 'length_score', 'value': length_score(args.text)})
 # TODO: add another functions here
 # scores.append({'name': 'xyz_score', 'value': xyz_score(args.text)})
 
