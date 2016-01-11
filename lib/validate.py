@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
 import argparse
 import json
 import math
@@ -9,6 +10,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--text", required=True, help="Input text")
 parser.add_argument("--short", action='store_true')
 args = parser.parse_args()
+
+input_text = args.text.decode('utf8')
 
 VALID_CHARS = u'qwertzuiopasdfghjklyxcvbnm1234567890QWERTZUIOPASDFGHJKLYXCVBNM ?:.,;-=/+ěščřžýáíéĚŠČŘŽÝÁÍÉůúŇ'
 
@@ -31,7 +34,6 @@ def length_score(text):
 #    text magic here
 #    return 0.5
 
-
 def compute(scores):
     total = 0
     cnt = 0
@@ -40,10 +42,9 @@ def compute(scores):
         total = (total * (cnt-1) + score['value']) / cnt;
     return {'score': total, 'parts': scores}
 
-
 scores = []
-scores.append({'name': 'chars_score', 'value': chars_score(args.text)})
-scores.append({'name': 'length_score', 'value': length_score(args.text)})
+scores.append({'name': 'chars_score', 'value': chars_score(input_text)})
+scores.append({'name': 'length_score', 'value': length_score(input_text)})
 # TODO: add another functions here
 # scores.append({'name': 'xyz_score', 'value': xyz_score(args.text)})
 
