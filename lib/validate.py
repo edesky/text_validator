@@ -20,7 +20,7 @@ def chars_score(text):
     for char in text:
         if char in VALID_CHARS:
             known_cnt += 1
-    return float(known_cnt)/len(text)
+    return float(known_cnt)/min(len(text), 1)
 
 def length_score(text):
     cnt = 0
