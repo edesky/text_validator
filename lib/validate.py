@@ -20,14 +20,14 @@ def chars_score(text):
     for char in text:
         if char in VALID_CHARS:
             known_cnt += 1
-    return float(known_cnt)/min(len(text), 1)
+    return float(known_cnt)/max(len(text), 1)
 
 def length_score(text):
     cnt = 0
     for char in text:
         if char in VALID_CHARS:
             cnt += 1
-    return min(math.log(cnt, 1000), 1.0)
+    return min(math.log(max(cnt, 1), 1000), 1.0)
 
 # TODO: add another functions here
 # def xyz_score(text):
